@@ -75,11 +75,11 @@
 
         $privilege_view .= '<select name="privilege" class="form-control">';
         if(isset($privilege)&& $privilege==1){
-            $privilege_view .=  '<option value="m" >Not Admin</option>';
-            $privilege_view .=  '<option value="m" selected>Admin</option>';
+            $privilege_view .=  '<option value="0" >Not Admin</option>';
+            $privilege_view .=  '<option value="1" selected>Admin</option>';
         }else{
-            $privilege_view .=  '<option value="m" selected>Not Admin</option>';
-            $privilege_view .=  '<option value="m" >Admin</option>';
+            $privilege_view .=  '<option value="0" selected>Not Admin</option>';
+            $privilege_view .=  '<option value="1" >Admin</option>';
         }
         
         $privilege_view .= "</select>";
@@ -176,13 +176,15 @@
                 $result->bindValue(':pwd' , $hashed_pwd,PDO::PARAM_STR);
 
                 if($result->execute()){
-                    if(userConnect()){
+                    if(userConnect() && $_SESSION['user']['id_user']== $_GET['id']){
                         foreach ($_POST as $key => $value) {
                             if($key != 'password'){
                                 $_SESSION['user'][$key] = $value;
                                 header('location:profile.php');
                             }
                         }
+                    }elseif(userAdmin()){
+                        header("location:admin/user_list");
                     }else{
                         header("location:login.php");
                     }
@@ -206,9 +208,11 @@
         <div class="form-group">
             <input type="text" class="form-control" name="pseudo" value="<?= $pseudo?>" placeholder="Choose a pseudo..." required>
         </div>
+        <?php if(!isset($_GET) && !userConnect()) :?>
         <div class="form-group">
             <input type="password" class="form-control"  name="password" value="<?= $password?>" placeholder="Choose a password..." required>
         </div>
+        <?php endif ?>
         <div class="form-group">
             <input type="text" class="form-control" name="firstname" value="<?= $firstname?>" placeholder="Your firstname" required>
         </div>
