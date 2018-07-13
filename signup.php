@@ -100,7 +100,7 @@
         }
 
         // check password
-        if(!empty($_POST["password"] || $_POST['action']== "Update")){
+        if(!empty($_POST["password"]) ){
             if($_POST["password"]!=$password || $password == ''){
                 $password_verif = preg_match('#^(?=.*[A-Z])(?=.*[A-Z])(?=.*\d)(?=.*[-+!*\'\?$@%_])([-+!*\?$\'@%_\w]{6,15})$#',$_POST["password"]); //it means we ask between 6 to 15 characters + 1 UPPER + 1 LOWER + 1 number + 1 symbol
 
@@ -108,6 +108,8 @@
                     $msg_error .= "<div class='alert alert-danger' role='alert'>Your password should contain one uppercase, one lowercase, one number and a special symbol </div>";
                 }
             }
+        }elseif($action == "Update"){
+
         }else{
             $msg_error .= "<div class='alert alert-danger' role='alert'>Please enter a valid password</div>";
         }
