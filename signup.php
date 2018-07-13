@@ -196,7 +196,7 @@
 
 
     
-    debug($_SESSION)
+    //debug($_SESSION)
 ?>
 
     <h1><?= $page ?></h1>
