@@ -2,6 +2,90 @@
     require_once("inc/header.php");
 
     $page = "Signup";
+    
+    $privilege_view= '';
+
+    $direction ='';
+
+    if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && ($_GET['id']==$_SESSION['user']['id_user'] || userAdmin())){
+        $req = "SELECT * FROM user WHERE id_user = :id_user";
+        $result = $pdo->prepare($req);
+        $result->bindValue(':id_user', $_GET['id'] , PDO::PARAM_INT );
+        $result->execute();
+        if($result->rowCount() == 1){
+            $user = $result->fetch();
+            $pseudo = $user['pseudo']; 
+            $firstname = $user['firstname'];
+            $lastname = $user['lastname'];
+            $email = $user['email'];
+            $address = $user['address'];
+            $zip_code = $user['zip_code'];
+            $city = $user['city'];
+            $gender = $user['gender'];
+            $password = $user['pwd'];
+            $action = "Update";
+            $privilege = $user['privilege'];
+
+        }
+        $direction .= '?id=';
+        $direction .= $_GET['id'];
+
+    }elseif(userConnect()){
+        $req = "SELECT * FROM user WHERE id_user = :id_user";
+        $result = $pdo->prepare($req);
+        $result->bindValue(':id_user', $_SESSION['user']['id_user'] , PDO::PARAM_INT );
+        $result->execute();
+        $user = $result->fetch();
+        $pseudo = $user['pseudo']; 
+        $firstname = $user['firstname'];
+        $lastname = $user['lastname'];
+        $email = $user['email'];
+        $address = $user['address'];
+        $zip_code = $user['zip_code'];
+        $city = $user['city'];
+        $gender = $user['gender'];
+        $password = $user['pwd']; 
+        $action = "Update"; 
+        $privilege = 0;      
+
+        $direction .= '?id=';
+        $direction .= $_SESSION['user']['id_user'];
+        
+    }else {
+        
+        //Reload the values entered by the user if problem during page reloading
+        $pseudo = (isset($_POST['pseudo'])) ? $_POST['pseudo'] : ''; // if we receive a POST, the variable will keep the value or if no POST, value = empty
+        $firstname = (isset($_POST['firstname'])) ? $_POST['firstname'] : '';
+        $lastname = (isset($_POST['lastname'])) ? $_POST['lastname'] : '';
+        $email = (isset($_POST['email'])) ? $_POST['email'] : '';
+        $address = (isset($_POST['address'])) ? $_POST['address'] : '';
+        $zip_code = (isset($_POST['zipcode'])) ? $_POST['zipcode'] : '';
+        $city = (isset($_POST['city'])) ? $_POST['city'] : '';
+        $gender = (isset($_POST['gender'])) ? $_POST['gender'] : '';
+        $password = '';
+        $action = "Register";
+        $privilege= 0;
+        
+        
+    }
+    
+    if(userAdmin()){
+
+        $privilege_view .= '<div class="form-group"> ';
+
+        $privilege_view .= '<select name="privilege" class="form-control">';
+        if(isset($privilege)&& $privilege==1){
+            $privilege_view .=  '<option value="m" >Not Admin</option>';
+            $privilege_view .=  '<option value="m" selected>Admin</option>';
+        }else{
+            $privilege_view .=  '<option value="m" selected>Not Admin</option>';
+            $privilege_view .=  '<option value="m" >Admin</option>';
+        }
+        
+        $privilege_view .= "</select>";
+        $privilege_view .= "</div>";
+    }
+
 
     if($_POST){
         // check pseudo
@@ -17,10 +101,12 @@
 
         // check password
         if(!empty($_POST["password"])){
-            $password_verif = preg_match('#^(?=.*[A-Z])(?=.*[A-Z])(?=.*\d)(?=.*[-+!*\'\?$@%_])([-+!*\?$\'@%_\w]{6,15})$#',$_POST["password"]); //it means we ask between 6 to 15 characters + 1 UPPER + 1 LOWER + 1 number + 1 symbol
+            if($_POST["password"]!=$password || $password == ''){
+                $password_verif = preg_match('#^(?=.*[A-Z])(?=.*[A-Z])(?=.*\d)(?=.*[-+!*\'\?$@%_])([-+!*\?$\'@%_\w]{6,15})$#',$_POST["password"]); //it means we ask between 6 to 15 characters + 1 UPPER + 1 LOWER + 1 number + 1 symbol
 
-            if(!$password_verif){
-                $msg_error .= "<div class='alert alert-danger' role='alert'>Your password should contain one uppercase, one lowercase, one number and a special symbol </div>";
+                if(!$password_verif){
+                    $msg_error .= "<div class='alert alert-danger' role='alert'>Your password should contain one uppercase, one lowercase, one number and a special symbol </div>";
+                }
             }
         }else{
             $msg_error .= "<div class='alert alert-danger' role='alert'>Please enter a valid password</div>";
@@ -59,13 +145,25 @@
             $result = $pdo->prepare("SELECT pseudo FROM user WHERE pseudo = :pseudo");
             $result->bindValue(':pseudo' , $_POST['pseudo'],PDO::PARAM_STR);
             $result->execute();
-            if($result->rowCount()==1){
+            if($result->rowCount()==1 && !userConnect()){
                 $msg_error .= "<div class='alert alert-secondary' role='alert'>The pseudo $_POST[pseudo] is already taken, please choose another one.</div>";
             }else{
-                $result = $pdo->prepare("INSERT INTO user (pseudo, pwd, firstname, lastname, email, gender, city, zip_code, address, privilege) VALUES (:pseudo, :pwd, :firstname, :lastname, :email, :gender, :city, :zip_code, :address, 0)");
+                if(userConnect()){
+                    $result = $pdo->prepare("UPDATE user SET pseudo = :pseudo, pwd =:pwd, firstname = :firstname, lastname = :lastname, email =:email, gender = :gender, city = :city, zip_code =:zip_code, address =:address, privilege = :privilege WHERE id_user = :id_user ");
+                    $result->bindValue(':privilege' , $privilege,PDO::PARAM_INT);
+                    $result->bindValue(':id_user',$_GET['id'],PDO::PARAM_INT);
 
-                $hashed_pwd = password_hash($_POST['password'],PASSWORD_BCRYPT); // function password_hash() allows us to encrypt the password in a way securer way than md5. It takes 2 arguments: the result to hash, the method
+                }else {
+                    $result = $pdo->prepare("INSERT INTO user (pseudo, pwd, firstname, lastname, email, gender, city, zip_code, address, privilege) VALUES (:pseudo, :pwd, :firstname, :lastname, :email, :gender, :city, :zip_code, :address, 0)");
+                    
+                }
 
+                if($_POST["password"]!=$password || $password == 0){
+                    $hashed_pwd = password_hash($_POST['password'],PASSWORD_BCRYPT); // function password_hash() allows us to encrypt the password in a way securer way than md5. It takes 2 arguments: the result to hash, the method
+                }else{
+                    $hashed_pwd = $password;
+
+                }
                 $result->bindValue(':pseudo' , $_POST['pseudo'],PDO::PARAM_STR);
                 $result->bindValue(':firstname' , $_POST['firstname'],PDO::PARAM_STR);
                 $result->bindValue(':lastname' , $_POST['lastname'],PDO::PARAM_STR);
@@ -78,7 +176,16 @@
                 $result->bindValue(':pwd' , $hashed_pwd,PDO::PARAM_STR);
 
                 if($result->execute()){
-                    header("location:login.php");
+                    if(userConnect()){
+                        foreach ($_POST as $key => $value) {
+                            if($key != 'password'){
+                                $_SESSION['user'][$key] = $value;
+                                header('location:profile.php');
+                            }
+                        }
+                    }else{
+                        header("location:login.php");
+                    }
                 }
             }
 
@@ -86,28 +193,21 @@
 
     }
 
-    //Reload the values entered by the user if problem during page reloading
-    $pseudo = (isset($_POST['pseudo'])) ? $_POST['pseudo'] : ''; // if we receive a POST, the variable will keep the value or if no POST, value = empty
-    $firstname = (isset($_POST['firstname'])) ? $_POST['firstname'] : '';
-    $lastname = (isset($_POST['lastname'])) ? $_POST['lastname'] : '';
-    $email = (isset($_POST['email'])) ? $_POST['email'] : '';
-    $address = (isset($_POST['address'])) ? $_POST['address'] : '';
-    $zip_code = (isset($_POST['zipcode'])) ? $_POST['zipcode'] : '';
-    $city = (isset($_POST['city'])) ? $_POST['city'] : '';
-    $gender = (isset($_POST['gender'])) ? $_POST['gender'] : '';
+
+
     
-    //debug($_POST);
+    debug($_SESSION)
 ?>
 
     <h1><?= $page ?></h1>
-    <form action="" method="post">
-        <small class="form-text text-muted">We'll never use your data for commercial use</small>
+    <form action="<?= $direction ?>" method="post">
+        <?= userConnect() ?'':'<small class="form-text text-muted">We\'ll never use your data for commercial use</small>'?>
         <?= $msg_error ?>
         <div class="form-group">
             <input type="text" class="form-control" name="pseudo" value="<?= $pseudo?>" placeholder="Choose a pseudo..." required>
         </div>
         <div class="form-group">
-            <input type="password" class="form-control"  name="password" placeholder="Choose a password..." required>
+            <input type="password" class="form-control"  name="password" value="<?= $password?>" placeholder="Choose a password..." required>
         </div>
         <div class="form-group">
             <input type="text" class="form-control" name="firstname" value="<?= $firstname?>" placeholder="Your firstname" required>
@@ -134,7 +234,8 @@
         <div class="form-group">
             <input type="text" class="form-control" name="city" value="<?= $city?>" placeholder="Your city" required>
         </div>
-        <input type="submit" class="btn btn-block btn-success" value="Register">
+        <?= $privilege_view ?>
+        <input type="submit" class="btn btn-block btn-success" value="<?= $action?>">
     </form>
 
 <?php
