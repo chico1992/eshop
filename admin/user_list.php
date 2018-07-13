@@ -18,7 +18,7 @@
         $content .= '<tr>';
         foreach ($user as $key => $value) {
             if ($key=='picture') {
-                $content .= "<td><img style='width:70px;' src='".URL."uploads/img/".$value."'></td>";
+                $content .= "<td><img style='width:70px;' src='".URL."uploads/user/".$value."'></td>";
             } else {
                 $content .= '<td>'.$value."</td>";
             }
@@ -32,7 +32,7 @@
 ?>
 
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Show products</h1>
+        <h1 class="h2">Show Users</h1>
     </div>
     <table class="table table-striped table-dark">
     <thead>
