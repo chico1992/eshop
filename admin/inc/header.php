@@ -65,6 +65,12 @@
                   Show products
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="user_list.php">
+                  <span data-feather="file"></span>
+                  Users List
+                </a>
+              </li>
             </ul>
           </div>
         </nav>
