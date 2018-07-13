@@ -75,11 +75,11 @@
 
         $privilege_view .= '<select name="privilege" class="form-control">';
         if(isset($privilege)&& $privilege==1){
-            $privilege_view .=  '<option value="0" >Not Admin</option>';
-            $privilege_view .=  '<option value="1" selected>Admin</option>';
-        }else{
             $privilege_view .=  '<option value="0" selected>Not Admin</option>';
             $privilege_view .=  '<option value="1" >Admin</option>';
+        }else{
+            $privilege_view .=  '<option value="0" >Not Admin</option>';
+            $privilege_view .=  '<option value="1" selected>Admin</option>';
         }
         
         $privilege_view .= "</select>";
@@ -100,7 +100,7 @@
         }
 
         // check password
-        if(!empty($_POST["password"])){
+        if(!empty($_POST["password"] || $_POST['action']== "Update")){
             if($_POST["password"]!=$password || $password == ''){
                 $password_verif = preg_match('#^(?=.*[A-Z])(?=.*[A-Z])(?=.*\d)(?=.*[-+!*\'\?$@%_])([-+!*\?$\'@%_\w]{6,15})$#',$_POST["password"]); //it means we ask between 6 to 15 characters + 1 UPPER + 1 LOWER + 1 number + 1 symbol
 
@@ -208,7 +208,7 @@
         <div class="form-group">
             <input type="text" class="form-control" name="pseudo" value="<?= $pseudo?>" placeholder="Choose a pseudo..." required>
         </div>
-        <?php if(!isset($_GET) && !userConnect()) :?>
+        <?php if(!isset($_GET['id']) && !userConnect()) :?>
         <div class="form-group">
             <input type="password" class="form-control"  name="password" value="<?= $password?>" placeholder="Choose a password..." required>
         </div>
