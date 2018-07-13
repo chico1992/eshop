@@ -1,0 +1,39 @@
+<?php
+    require_once("inc/header.php");
+
+
+    if($_GET['id'] && is_numeric($_GET['id'])){
+        $result = $pdo->prepare("SELECT * FROM product WHERE id_product = :id_product");
+        $result->bindValue(':id_product',$_GET['id'],PDO::PARAM_INT);
+
+        $result->execute();
+        if($result->rowCount()== 1){
+            $product_details = $result->fetch();
+
+            extract($product_details);
+        }else{
+            header("location:eshop.php?m=error");
+        }
+    }else{
+        header("location:eshop.php?m=error");
+    }
+    $page= $title;
+
+?>
+
+
+    <h1><?= $page ?></h1>
+    <img src="uploads/img/<?=$picture ?>" style="max-width: 20%;" alt="<?=$title?>" >
+    <p><?=$description?></p>
+    <ul>
+        <li>Reference: <strong><?=$reference ?></strong></li>
+        <li>Cetegory: <strong><?=$category ?></strong></li>
+        <li>Color: <strong><?=$color ?></strong></li>
+        <li>Size: <strong><?=$size ?></strong></li>
+        <li>Gender: <strong><?=$gender ?></strong></li>
+        <li>Price: <strong style="color: darkblue;"><?=$price ?> €</strong><em>All taxes included</em></li>
+    </ul>
+
+<?php
+    require_once("inc/footer.php");
+?>
