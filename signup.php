@@ -101,12 +101,10 @@
 
         // check password
         if(!empty($_POST["password"]) ){
-            if($_POST["password"]!=$password || $password == ''){
-                $password_verif = preg_match('#^(?=.*[A-Z])(?=.*[A-Z])(?=.*\d)(?=.*[-+!*\'\?$@%_])([-+!*\?$\'@%_\w]{6,15})$#',$_POST["password"]); //it means we ask between 6 to 15 characters + 1 UPPER + 1 LOWER + 1 number + 1 symbol
+            $password_verif = preg_match('#^(?=.*[A-Z])(?=.*[A-Z])(?=.*\d)(?=.*[-+!*\'\?$@%_])([-+!*\?$\'@%_\w]{6,15})$#',$_POST["password"]); //it means we ask between 6 to 15 characters + 1 UPPER + 1 LOWER + 1 number + 1 symbol
 
-                if(!$password_verif){
-                    $msg_error .= "<div class='alert alert-danger' role='alert'>Your password should contain one uppercase, one lowercase, one number and a special symbol </div>";
-                }
+            if(!$password_verif){
+                $msg_error .= "<div class='alert alert-danger' role='alert'>Your password should contain one uppercase, one lowercase, one number and a special symbol </div>";
             }
         }elseif($action == "Update"){
 
@@ -151,19 +149,19 @@
                 $msg_error .= "<div class='alert alert-secondary' role='alert'>The pseudo $_POST[pseudo] is already taken, please choose another one.</div>";
             }else{
                 if(userConnect()){
-                    $result = $pdo->prepare("UPDATE user SET pseudo = :pseudo, pwd =:pwd, firstname = :firstname, lastname = :lastname, email =:email, gender = :gender, city = :city, zip_code =:zip_code, address =:address, privilege = :privilege WHERE id_user = :id_user ");
+                    $result = $pdo->prepare("UPDATE user SET pseudo = :pseudo, firstname = :firstname, lastname = :lastname, email =:email, gender = :gender, city = :city, zip_code =:zip_code, address =:address, privilege = :privilege WHERE id_user = :id_user ");
                     $result->bindValue(':privilege' , $privilege,PDO::PARAM_INT);
                     $result->bindValue(':id_user',$_GET['id'],PDO::PARAM_INT);
 
                 }else {
-                    $result = $pdo->prepare("INSERT INTO user (pseudo, pwd, firstname, lastname, email, gender, city, zip_code, address, privilege) VALUES (:pseudo, :pwd, :firstname, :lastname, :email, :gender, :city, :zip_code, :address, 0)");
+                    $result = $pdo->prepare("INSERT INTO user (pseudo,pwd , firstname, lastname, email, picture, gender, city, zip_code, address, privilege) VALUES (:pseudo, :pwd, :firstname, :lastname, :email, 'default.jpg', :gender, :city, :zip_code, :address, 0)");
                     
                 }
 
-                if($_POST["password"]!=$password || $password == 0){
+                if(isset($_POST["password"])){
                     $hashed_pwd = password_hash($_POST['password'],PASSWORD_BCRYPT); // function password_hash() allows us to encrypt the password in a way securer way than md5. It takes 2 arguments: the result to hash, the method
+                    $result->bindValue(':pwd' , $hashed_pwd,PDO::PARAM_STR);
                 }else{
-                    $hashed_pwd = $password;
 
                 }
                 $result->bindValue(':pseudo' , $_POST['pseudo'],PDO::PARAM_STR);
@@ -175,7 +173,6 @@
                 $result->bindValue(':address' , $_POST['address'],PDO::PARAM_STR);
                 $result->bindValue(':zip_code' , $_POST['zipcode'],PDO::PARAM_STR);
 
-                $result->bindValue(':pwd' , $hashed_pwd,PDO::PARAM_STR);
 
                 if($result->execute()){
                     if(userConnect() && $_SESSION['user']['id_user']== $_GET['id']){
@@ -186,7 +183,7 @@
                             }
                         }
                     }elseif(userAdmin()){
-                        header("location:admin/user_list");
+                        header("location:admin/user_list.php?update=1");
                     }else{
                         header("location:login.php");
                     }

@@ -23,7 +23,7 @@
 
 
     <h1><?= $page ?></h1>
-    <img src="uploads/img/<?=$picture ?>" style="max-width: 20%;" alt="<?=$title?>" >
+    <img src="uploads/product/<?=$picture ?>" style="max-width: 20%;" alt="<?=$title?>" >
     <p><?=$description?></p>
     <ul>
         <li>Reference: <strong><?=$reference ?></strong></li>

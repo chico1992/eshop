@@ -16,7 +16,7 @@
             $picture_name = str_replace(' ','-',$picture_name);
             
             // we register the path of my file
-            $picture_path = ROOT_TREE . 'uploads/img/'.$picture_name;
+            $picture_path = ROOT_TREE . 'uploads/product/'.$picture_name;
             
             if($_FILES['product_picture']['size']>2000000){
                 $msg_error .= "<div class='alert alert-danger' role='alert'>Please select a 2Mo file maximum! </div>";
@@ -27,8 +27,8 @@
                 $msg_error .= "<div class='alert alert-danger' role='alert'>Please use JPEG/JPG, PNG or GIF format</div>";
             }
 
-            if(isset($_POST['actual_picture']) && file_exists(ROOT_TREE . 'uploads/img/'.$_POST['actual_picture']) && ($_POST['actual_picture']!= 'default.jpg')){
-                unlink(ROOT_TREE . 'uploads/img/'.$_POST['actual_picture']);
+            if(isset($_POST['actual_picture']) && file_exists(ROOT_TREE . 'uploads/product/'.$_POST['actual_picture']) && ($_POST['actual_picture']!= 'default.jpg')){
+                unlink(ROOT_TREE . 'uploads/product/'.$_POST['actual_picture']);
             }
 
         }elseif(isset($_POST['actual_picture'])){
@@ -169,7 +169,7 @@
             <?php 
                 if(isset($update_product)){
                     echo "<input name='actual_picture' value='$picture' type='hidden'>";
-                    echo "<img style='width:100px;' src='".URL."uploads/img/$picture'>";
+                    echo "<img style='width:100px;' src='".URL."uploads/product/$picture'>";
                 }
             ?>
         </div>

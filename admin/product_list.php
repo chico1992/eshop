@@ -1,34 +1,13 @@
 <?php
     require_once("inc/header.php");
+    require_once("inc/functions.php");
 
     $message = '';
 
     if($_GET){
-        if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
+        if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['context']) && $_GET['context'] == 'product'){
             
-            $req = "SELECT * FROM product WHERE id_product = :id_product";
-            $result = $pdo->prepare($req);
-            $result->bindValue(':id_product',$_GET['id'],PDO::PARAM_INT);
-            $result->execute();
-            if($result->rowCount()== 1){
-                $product = $result->fetch();
-
-                $delete_request="DELETE FROM product WHERE id_product=$product[id_product]";
-
-                $delete_result = $pdo->exec($delete_request);
-                if($delete_result){
-                    $picture_path = ROOT_TREE .'uploads/img/'.$product['picture'];
-                    if(file_exists($picture_path) && $product['picture']!= 'default.jpg'){ // function file_exists()allows us to be sure that we got this picture registered on the server
-                        unlink($picture_path); // function unlink() allows us to delete a file from the server
-                    }
-
-                    $message= "<div class='alert alert-success' role='alert'>The product ".$product['title']." was deleted</div>";
-                }else{
-                    $message= "<div class='alert alert-danger' role='alert'>The delete failed</div>";
-                }
-            }else{
-                $message= "<div class='alert alert-danger' role='alert'>The delete failed</div>";
-            }
+            delete($_GET['id'] , $_GET['context']);
         }else{
             $message= "<div class='alert alert-danger' role='alert'>The delete failed</div>";
         }
@@ -56,14 +35,15 @@
         $content .= '<tr>';
         foreach ($product as $key => $value) {
             if ($key=='picture') {
-                $content .= "<td><img style='width:70px;' src='".URL."uploads/img/".$value."'></td>";
+                $content .= "<td><img style='width:70px;' src='".URL."uploads/product/".$value."'></td>";
             } else {
                 $content .= '<td>'.$value."</td>";
             }
             
         }
         $content .= "<td><a href='product_form.php?id=".$product['id_product']."'=><i class='fas fa-edit fa-lg'></i></a></td>";
-        $content .= "<td><a href='?id=".$product['id_product']."'><i class='fas fa-trash fa-lg text-danger'></i></a></td>";
+        $content .= "<td><a data-toggle='modal' data-target='#deleteModal".$product['id_product']."'><i class='fas fa-trash fa-lg text-danger'></i></a></td>";
+        deleteModal($product['id_product'] , $product['title'], 'product');
         $content .= '</tr>';
     }
 
