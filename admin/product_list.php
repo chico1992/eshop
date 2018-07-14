@@ -6,29 +6,7 @@
     if($_GET){
         if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
             
-            $req = "SELECT * FROM product WHERE id_product = :id_product";
-            $result = $pdo->prepare($req);
-            $result->bindValue(':id_product',$_GET['id'],PDO::PARAM_INT);
-            $result->execute();
-            if($result->rowCount()== 1){
-                $product = $result->fetch();
-
-                $delete_request="DELETE FROM product WHERE id_product=$product[id_product]";
-
-                $delete_result = $pdo->exec($delete_request);
-                if($delete_result){
-                    $picture_path = ROOT_TREE .'uploads/img/'.$product['picture'];
-                    if(file_exists($picture_path) && $product['picture']!= 'default.jpg'){ // function file_exists()allows us to be sure that we got this picture registered on the server
-                        unlink($picture_path); // function unlink() allows us to delete a file from the server
-                    }
-
-                    $message= "<div class='alert alert-success' role='alert'>The product ".$product['title']." was deleted</div>";
-                }else{
-                    $message= "<div class='alert alert-danger' role='alert'>The delete failed</div>";
-                }
-            }else{
-                $message= "<div class='alert alert-danger' role='alert'>The delete failed</div>";
-            }
+            //add the delete function here
         }else{
             $message= "<div class='alert alert-danger' role='alert'>The delete failed</div>";
         }

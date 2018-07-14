@@ -1,5 +1,6 @@
 <?php
     require_once("inc/header.php");
+    require_once("inc/functions.php");
     $content= "";
 
     $users_table = $pdo->query("SELECT * FROM user");
@@ -24,8 +25,9 @@
             }
             
         }
-        $content .= "<td><a href='product_form.php?id=".$user['id_user']."'=><i class='fas fa-edit fa-lg'></i></a></td>";
-        $content .= "<td><a href='?id=".$user['id_user']."'><i class='fas fa-trash fa-lg text-danger'></i></a></td>";
+        $content .= "<td><a href='".URL."signup.php?id=".$user['id_user']."'=><i class='fas fa-edit fa-lg'></i></a></td>";
+        $content .= "<td><a data-toggle='modal' data-target='#deleteModal".$user['id_user']."'><i class='fas fa-trash fa-lg text-danger'></i></a></td>";
+        deleteModal($user['id_user'] , $user['pseudo'], 'user');
         $content .= '</tr>';
     }
 
