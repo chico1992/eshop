@@ -30,7 +30,7 @@
     foreach ($products as $product) {
         $product_view .= "<div class='col-sm-4'>";
         $product_view .=  '<div class="card " >';
-        $product_view .= "<img class='card-img-top' src='".URL."uploads/img/".$product['picture']."' >";
+        $product_view .= "<img class='card-img-top' src='".URL."uploads/product/".$product['picture']."' >";
         $product_view .= '<div class="card-body">';
         $product_view .= "<h5 class='card-title'>$product[title]</h5>";
         $product_view .= "<p class='card-text'>".substr($product['description'],0,40)."</p>";

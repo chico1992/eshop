@@ -2,3 +2,5 @@ inc/init.php
 .DS_Store
 assets/
 uploads/img/
+uploads/user/
+uploads/product/
