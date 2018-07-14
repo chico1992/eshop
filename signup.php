@@ -183,7 +183,7 @@
                             }
                         }
                     }elseif(userAdmin()){
-                        header("location:admin/user_list.php");
+                        header("location:admin/user_list.php?update=1");
                     }else{
                         header("location:login.php");
                     }

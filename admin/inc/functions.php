@@ -24,6 +24,7 @@
 
     function delete($id , $context){
         global $message;
+        global $pdo;
         $req = "SELECT * FROM ".$context." WHERE id_".$context." = :id";
         $result = $pdo->prepare($req);
         $result->bindValue(':id',$id,PDO::PARAM_INT);
@@ -36,13 +37,16 @@
             $delete_result = $pdo->prepare($delete_request);
             $delete_result->bindValue(':id',$id,PDO::PARAM_INT);
 
-            if($delete_result){
-                $picture_path = ROOT_TREE .'uploads/img/'.$deleted['picture'];
+            if($delete_result->execute()){
+                $picture_path = ROOT_TREE .'uploads/'.$context.'/'.$deleted['picture'];
                 if(file_exists($picture_path) && $deleted['picture']!= 'default.jpg'){ // function file_exists()allows us to be sure that we got this picture registered on the server
                     unlink($picture_path); // function unlink() allows us to delete a file from the server
                 }
-
-                $message= "<div class='alert alert-success' role='alert'>The product ".$product['title']." was deleted</div>";
+                if($context == 'product'){
+                    $message= "<div class='alert alert-success' role='alert'>The ".$context." ".$deleted['title']." was deleted</div>";
+                }elseif($context == 'user'){
+                    $message= "<div class='alert alert-success' role='alert'>The ".$context." ".$deleted['pseudo']." was deleted</div>";
+                }
             }else{
                 $message= "<div class='alert alert-danger' role='alert'>The delete failed</div>";
             }

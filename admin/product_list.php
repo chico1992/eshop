@@ -1,12 +1,13 @@
 <?php
     require_once("inc/header.php");
+    require_once("inc/functions.php");
 
     $message = '';
 
     if($_GET){
-        if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
+        if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['context']) && $_GET['context'] == 'product'){
             
-            //add the delete function here
+            delete($_GET['id'] , $_GET['context']);
         }else{
             $message= "<div class='alert alert-danger' role='alert'>The delete failed</div>";
         }
@@ -41,7 +42,8 @@
             
         }
         $content .= "<td><a href='product_form.php?id=".$product['id_product']."'=><i class='fas fa-edit fa-lg'></i></a></td>";
-        $content .= "<td><a href='?id=".$product['id_product']."'><i class='fas fa-trash fa-lg text-danger'></i></a></td>";
+        $content .= "<td><a data-toggle='modal' data-target='#deleteModal".$product['id_product']."'><i class='fas fa-trash fa-lg text-danger'></i></a></td>";
+        deleteModal($product['id_product'] , $product['title'], 'product');
         $content .= '</tr>';
     }
 
