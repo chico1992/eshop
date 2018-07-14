@@ -154,7 +154,7 @@
                     $result->bindValue(':id_user',$_GET['id'],PDO::PARAM_INT);
 
                 }else {
-                    $result = $pdo->prepare("INSERT INTO user (pseudo,pwd , firstname, lastname, email, gender, city, zip_code, address, privilege) VALUES (:pseudo, :pwd, :firstname, :lastname, :email, :gender, :city, :zip_code, :address, 0)");
+                    $result = $pdo->prepare("INSERT INTO user (pseudo,pwd , firstname, lastname, email, picture, gender, city, zip_code, address, privilege) VALUES (:pseudo, :pwd, :firstname, :lastname, :email, 'default.jpg', :gender, :city, :zip_code, :address, 0)");
                     
                 }
 

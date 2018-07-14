@@ -35,7 +35,7 @@
         $content .= '<tr>';
         foreach ($product as $key => $value) {
             if ($key=='picture') {
-                $content .= "<td><img style='width:70px;' src='".URL."uploads/img/".$value."'></td>";
+                $content .= "<td><img style='width:70px;' src='".URL."uploads/product/".$value."'></td>";
             } else {
                 $content .= '<td>'.$value."</td>";
             }
