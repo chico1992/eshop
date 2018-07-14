@@ -17,7 +17,8 @@ if(!empty($_FILES['user_picture']['name'])){
         $picture_name = str_replace(' ','-',$picture_name);
         $picture_path = ROOT_TREE . 'uploads/user/'.$picture_name;
 
-        $result = $pdo->prepare("UPDATE user SET picture=:picture");
+        $result = $pdo->prepare("UPDATE user SET picture=:picture WHERE id_user = :id_user");
+        $result->bindValue(':id_user',$_SESSION['user']['id_user'],PDO::PARAM_INT);
         $result->bindValue(':picture',$picture_name,PDO::PARAM_STR);
         if($result->execute()){
             if(!empty($_FILES['user_picture']['name'])){
