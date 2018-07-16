@@ -1,5 +1,7 @@
 <?php
     require_once("inc/header.php");
+    require_once("admin/inc/functions.php");
+
 
     $page= "My Profile";
 
@@ -29,6 +31,27 @@ if(!empty($_FILES['user_picture']['name'])){
         header('location:profile.php');
 
 }
+
+
+if($_GET){
+    if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['context']) && $_GET['context'] == 'user'){
+            
+        delete($_GET['id'] , $_GET['context']);
+
+        unset($_SESSION['user']);
+        header('location:index.php');
+
+        
+        
+    }else{
+        $message= "<div class='alert alert-danger' role='alert'>The delete failed</div>";
+    }
+    
+}
+
+
+
+
 ?>
 
 
@@ -52,8 +75,12 @@ if(!empty($_FILES['user_picture']['name'])){
         </div>
     </form>
 
-    <div>
-        <a href='signup.php'=><button type="button" class="btn btn-outline-success">Update Your Infos</button></a>
+    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+        <a href='password_update.php'=><button type="button" class="btn btn-success btn-lg">Update Your password</button></a>
+        <a href='signup.php'=><button type="button" class="btn btn-primary btn-lg">Update Your Infos</button></a>
+        <a data-toggle='modal' data-target='#deleteModal<?=$_SESSION['user']['id_user']?>'><button type="button" class="btn btn-danger btn-lg">Delete Your profile</button></a>
+        <?=deleteModal($_SESSION['user']['id_user'] , $_SESSION['user']['pseudo'], 'user');?>
+        
     </div>
 
 
