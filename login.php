@@ -37,12 +37,13 @@
     <h1><?= $page ?></h1>
     <?= $msg_error ?>
     <form action="" method="post">
-    <div class="form-group">
+        <div class="form-group">
             <input type="text" class="form-control" name="pseudo" placeholder="Enter your pseudo" required>
         </div>
         <div class="form-group">
             <input type="password" class="form-control"  name="password" placeholder="Enter your password" required>
         </div>
+        <a href="forgotten_password.php"><small>Forgot your password?</small></a>
         <input type="submit" value="Login" class="btn-block btn btn-success">
     </form>
 
