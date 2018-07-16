@@ -28,13 +28,13 @@
     $products=$result->fetchAll();
     $product_view = "";
     foreach ($products as $product) {
-        $product_view .= "<div class='col-sm-4'>";
-        $product_view .=  '<div class="card " >';
-        $product_view .= "<img class='card-img-top' src='".URL."uploads/product/".$product['picture']."' >";
-        $product_view .= '<div class="card-body">';
+        $product_view .= "<div class='col-sm-4'style='margin-bottom:20px;'>";
+        $product_view .=  "<div class='card style='max-height:700px;min-height:700px;' >";
+        $product_view .= "<img class='card-img-top' style='max-height:300px;min-height:300px;' src='".URL."uploads/product/".$product['picture']."' >";
+        $product_view .= "<div class='card-body' style='background:#FFEBCD;'>";
         $product_view .= "<h5 class='card-title'>$product[title]</h5>";
         $product_view .= "<p class='card-text'>".substr($product['description'],0,40)."</p>";
-        $product_view .= "<a href='product_page.php?id=$product[id_product]' class='btn btn-primary'>Go to product</a>";
+        $product_view .= "<a href='product_page.php?id=$product[id_product]' class='btn btn-info' style='color:;'>Go to product</a>";
         $product_view .= "</div>";
         $product_view .= "</div>";
         $product_view .= "</div>";

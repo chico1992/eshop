@@ -57,11 +57,11 @@ if($_GET){
 
     <h1><?= $page ?></h1>
     <p>Please find your information below:</p>
-    <ul class="list-group list-group-flush">
+    <ul class="list-group list-group-flush" style="list-style-type: none;">
         <li class="list-group-item">Firstname: <?= $_SESSION['user']['firstname']?></li>
         <li class="list-group-item">Lastname: <?= $_SESSION['user']['lastname']?></li>
         <li class="list-group-item">Email: <?= $_SESSION['user']['email']?></li>
-        <li><img style='width:70px;' src='<?= URL."uploads/user/".$_SESSION['user']['picture']?>'></li>
+        <li><img style='width:120px; border-radius:50%;' src='<?= URL."uploads/user/".$_SESSION['user']['picture']?>'></li>
         
     </ul>
     <form action="" method="post" enctype="multipart/form-data">

@@ -10,6 +10,7 @@
         <meta name="description" content="">
         <meta name="author" content="Cedric">
         <link rel="icon" href="../../../../favicon.ico">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
         <title>My Eshop.com | Best deal$ online</title>
 
@@ -52,20 +53,26 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>
                     </li>
-                    <?php if(userConnect()): ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= URL?>logout.php">Logout</a>
-                    </li>
-                    <?php endif; ?>
                     <?php if(userAdmin()): ?>
+                    
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= URL?>admin/product_form.php">Backoffice</a>
+                        <form class="form-inline my-2 my-lg-0">
+                            <a class="nav-link" href="<?= URL?>admin/product_form.php">Backoffice</a>
+                        </form>
                     </li>
                         
                     <?php endif; ?>
+                    <li>
+                        <a class="nav-link" href="<?=URL?>cart.php"><i class="fas fa-shopping-cart"></i><?php if(productNumber()){echo'<span class="bubble">' . productNumber() . '</span>';} ?></a>
+                    </li>
                 </ul>
             </div>
+            <?php if(userConnect()): ?>
+                <a  href="profile.php"><img  style='width:40px; border:2px solid #2FFA21; border-radius:50%;' src='<?= URL."uploads/user/".$_SESSION['user']['picture']?>'></a>
+                <a class="nav-link" href="<?= URL?>logout.php">Logout</a>
+            <?php endif; ?>
         </nav>
+
 
         <main role="main" class="container">
             <div class="starter-template">
