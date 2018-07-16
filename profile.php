@@ -52,6 +52,10 @@ if(!empty($_FILES['user_picture']['name'])){
         </div>
     </form>
 
+    <div>
+        <a href='signup.php'=><button type="button" class="btn btn-outline-success">Update Your Infos</button></a>
+    </div>
+
 
 
     
