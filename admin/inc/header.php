@@ -71,6 +71,12 @@
                   Users List
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="order_details.php">
+                  <span data-feather="file"></span>
+                  Order Details
+                </a>
+              </li>
             </ul>
           </div>
         </nav>
