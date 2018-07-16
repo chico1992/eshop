@@ -4,7 +4,12 @@
     $page= "Login";
 
     if($_POST){
-        $req="SELECT * FROM user WHERE pseudo= :pseudo";
+        if(filter_var($_POST['pseudo'],FILTER_VALIDATE_EMAIL)){
+            $req="SELECT * FROM user WHERE email= :pseudo";
+        }else{
+
+            $req="SELECT * FROM user WHERE pseudo= :pseudo";
+        }
 
         $result= $pdo->prepare($req);
         $result->bindValue(":pseudo",$_POST['pseudo'],PDO::PARAM_STR);
