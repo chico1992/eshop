@@ -87,9 +87,14 @@ if($_POST)
 		unset($_SESSION['cart']); // we delete the cart
 	}
 
+
 }
 
-// debug($_SESSION);
+$result = $pdo -> query("SELECT stock FROM product");
+$stock = $result -> fetch();
+
+
+//debug($stock);
 
 ?>
 
@@ -120,7 +125,19 @@ if($_POST)
 			<tr>
 				<td><a href="product_page.php?id=<?= $key ?>"><img src="<?= URL ?>uploads/product/<?= $picture ?>" height="80"></a></td>
 				<td><?= $title ?></td>
-				<td><?= $quantity ?></td>
+				<td>
+				
+				<form method="post" action="">
+                    	<label>Quantity</label>
+                    	<select name="quantity" class="form-control">
+                       	 <?php for ($i=1; $i <=$product['quantity']; $i++) { 
+                        	    echo '<option>' . $i . '</option>';
+                       	 } ?>
+                   		</select>
+                   		<input type="submit" value="Update the quantity" class="btn btn-primary">
+                	</form>
+				
+				</td>
 				<td><?= $price ?></td>
 				<td><?= ($price * $quantity) ?></td>
 				<td><a href="?a=delete&id=<?= $key ?>"><i class="far fa-trash-alt"></i></a></td>
@@ -154,5 +171,6 @@ if($_POST)
 </table>
 
 <?php
+//debug($_SESSION);
 require_once('inc/footer.php'); 
 ?>
