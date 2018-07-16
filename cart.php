@@ -90,8 +90,7 @@ if($_POST)
 
 }
 
-$result = $pdo -> query("SELECT stock FROM product");
-$stock = $result -> fetch();
+
 
 
 //debug($stock);
@@ -126,14 +125,13 @@ $stock = $result -> fetch();
 				<td><a href="product_page.php?id=<?= $key ?>"><img src="<?= URL ?>uploads/product/<?= $picture ?>" height="80"></a></td>
 				<td><?= $title ?></td>
 				<td>
-				
-				<form method="post" action="">
-                    	<label>Quantity</label>
-                    	<select name="quantity" class="form-control">
-                       	 <?php for ($i=1; $i <=$product['quantity']; $i++) { 
-                        	    echo '<option>' . $i . '</option>';
-                       	 } ?>
-                   		</select>
+					<?php
+						$req="SELECT stock FROM product WHERE id_product = $key";
+						$result = $pdo -> query($req);
+						$product = $result -> fetch();
+					?>
+					<form method="post" action="">
+                    	<input type="number" name="quantity" min="0" max="<?= $product['stock']?>" value="<?=$quantity?>">
                    		<input type="submit" value="Update the quantity" class="btn btn-primary">
                 	</form>
 				
